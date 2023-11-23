@@ -1,5 +1,10 @@
 package Modelo;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 /**
@@ -10,7 +15,8 @@ public class Usuario {
     int idUsuario;
     String nombre;
     String contrasenia;
-    GregorianCalendar fechaIngreso;
+    Calendar fechaIngreso;
+    String foto;
     
     public Usuario(int idUsuario, String nombre, String contrasenia)
     {
@@ -18,6 +24,21 @@ public class Usuario {
         this.nombre = nombre;
         this.contrasenia = contrasenia;
         this.fechaIngreso = new GregorianCalendar();
+    }
+
+    public Usuario() {
+        
+    }
+
+    public Usuario(int id, String nombreUsuario, String pass, java.sql.Date fecha, String foto) {
+        
+        this.idUsuario = id;
+        this.nombre = nombreUsuario;
+        this.contrasenia = pass;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha);
+        this.fechaIngreso = calendar;
+        this.foto = foto;
     }
 
     public int getIdUsuario() {
@@ -44,12 +65,38 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    public GregorianCalendar getFechaIngreso() {
+    public Calendar getFechaIngreso() {
         return fechaIngreso;
     }
 
-    public void setFechaIngreso(GregorianCalendar fechaIngreso) {
-        this.fechaIngreso = fechaIngreso;
+    public void setFechaIngreso(String fecha) throws ParseException {
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
+
+        try {
+            Date date = formatoFecha.parse(fecha);
+
+            // Crear un objeto Calendar y establecer la fecha
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTime(date);
+            this.fechaIngreso = calendar;
+            System.out.println("Fecha en formato GregorianCalendar: " + calendar.getTime());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+    public String getFoto() {
+        return foto;
+    }
+
+    public void setFoto(String foto) {
+        this.foto = foto;
+    }
+
+    @Override
+    public String toString() {
+        return "Usuario{" + "idUsuario=" + idUsuario + ", nombre=" + nombre + ", contrasenia=" + contrasenia + ", fechaIngreso=" + fechaIngreso + ", foto=" + foto + '}' + "\n";
     }
     
     

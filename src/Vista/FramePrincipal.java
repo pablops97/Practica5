@@ -5,7 +5,13 @@
  */
 package Vista;
 
+import Modelo.Usuario;
 import java.awt.BorderLayout;
+import java.sql.SQLException;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,10 +19,21 @@ import java.awt.BorderLayout;
  */
 public class FramePrincipal extends javax.swing.JFrame {
 
+    private static Usuario user;
     boolean inicioSesion = false;
+    private PanelUsuario panelIngreso;
+    private PanelInicial panelInicial;
+    public PanelUsuarioIniciado panelUsuarioIniciado;
+    public PanelVisualizarResumen panelResumen;
+    public PanelUsuarioResumen panelUsuarioResumen;
+    
     
     public FramePrincipal() {
         initComponents();
+        
+        menuAcerca.setEnabled(false);
+        menuVisualizar.setEnabled(false);
+        itemSalir.setEnabled(false);
         //ABRIR LA CONEXION A LA BASE DE DATOS
         //CREAR CLASE CONSULTACLIENTE PARA COMPROBAR SI EL CLIENTE Y USUARIO INTRODUCIDOS ESTA EN LA CONSULTA CLIENTE(STATMENTE Y RESULTSET)
         //CREAR CLASE CONSULTARESUMEN Y CREO UN STATMENT Y UN RESULSET DONDE SE CREA UNA COLLECTION Y SE DEVUELVE
@@ -24,11 +41,17 @@ public class FramePrincipal extends javax.swing.JFrame {
         //NO HACER CASO A QUE TODO SE HACE NE LA CLASE CONEXION
         
         //CREAR CONSULTADETALLE DONDE SE AVANZA Y SE RETROCEDE EN LA BASE DE DATOS, METODO LEER TAMBIEN Y ABRIR CONSULTA(CON UN INDICE)
-        panelIngreso = new PanelUsuario();
+        
+        
+        panelIngreso = new PanelUsuario(this);
+        panelInicial = new PanelInicial();
+        panelUsuarioResumen = new PanelUsuarioResumen();
+        
+        
         
         this.setResizable(false);
         this.setLayout(new BorderLayout());
-        
+        cambiarPanel(panelInicial);
     }
 
     /**
@@ -42,36 +65,55 @@ public class FramePrincipal extends javax.swing.JFrame {
 
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
+        menuValidar = new javax.swing.JMenu();
+        itemEntrar = new javax.swing.JMenuItem();
+        itemSalir = new javax.swing.JMenuItem();
+        menuVisualizar = new javax.swing.JMenu();
         jMenuItem2 = new javax.swing.JMenuItem();
-        jMenuItem3 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jMenu3 = new javax.swing.JMenu();
+        itemResumen = new javax.swing.JMenuItem();
+        menuAcerca = new javax.swing.JMenu();
 
         jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jMenu1.setText("Validar");
+        menuValidar.setText("Validar");
 
-        jMenuItem2.setText("Entrar");
-        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+        itemEntrar.setText("Entrar");
+        itemEntrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem2ActionPerformed(evt);
+                itemEntrarActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem2);
+        menuValidar.add(itemEntrar);
 
-        jMenuItem3.setText("Salir");
-        jMenu1.add(jMenuItem3);
+        itemSalir.setText("Salir");
+        itemSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemSalirActionPerformed(evt);
+            }
+        });
+        menuValidar.add(itemSalir);
 
-        jMenuBar1.add(jMenu1);
+        jMenuBar1.add(menuValidar);
 
-        jMenu2.setText("Visualizar");
-        jMenuBar1.add(jMenu2);
+        menuVisualizar.setText("Visualizar");
 
-        jMenu3.setText("Acerca de");
-        jMenuBar1.add(jMenu3);
+        jMenuItem2.setText("Detalle");
+        menuVisualizar.add(jMenuItem2);
+
+        itemResumen.setText("Resumen");
+        itemResumen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemResumenActionPerformed(evt);
+            }
+        });
+        menuVisualizar.add(itemResumen);
+
+        jMenuBar1.add(menuVisualizar);
+
+        menuAcerca.setText("Acerca de");
+        jMenuBar1.add(menuAcerca);
 
         setJMenuBar(jMenuBar1);
 
@@ -89,11 +131,34 @@ public class FramePrincipal extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+    private void itemEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemEntrarActionPerformed
 
+       panelIngreso = new PanelUsuario(this);
        this.cambiarPanel(panelIngreso);
    
-    }//GEN-LAST:event_jMenuItem2ActionPerformed
+    }//GEN-LAST:event_itemEntrarActionPerformed
+
+    private void itemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSalirActionPerformed
+        
+        panelUsuarioIniciado.setVisible(false);
+        
+        this.setSize(650, 648);
+        panelInicial = new PanelInicial();
+        cambiarPanel(panelInicial);
+        panelInicial.setVisible(true);
+        
+        itemEntrar.setVisible(true);
+        itemSalir.setEnabled(false);
+        menuAcerca.setEnabled(false);
+        menuVisualizar.setEnabled(false);
+    }//GEN-LAST:event_itemSalirActionPerformed
+
+    private void itemResumenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemResumenActionPerformed
+        panelResumen = new PanelVisualizarResumen(this);
+        
+        this.cambiarPanel(panelResumen);
+        
+    }//GEN-LAST:event_itemResumenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -131,19 +196,137 @@ public class FramePrincipal extends javax.swing.JFrame {
     }
     
     
-private void cambiarPanel(javax.swing.JPanel panel){
+//    private void cambiarPanel(javax.swing.JPanel panel)
+//    {
+//        this.setContentPane(panel);
+//        this.pack();
+//    }
+    
+    void cambiarPanel(javax.swing.JPanel panel) 
+    {
+        // Eliminar todos los componentes existentes en el marco
+        this.getContentPane().removeAll();
+
+        // Establecer el nuevo panel en el contenido del marco
         this.setContentPane(panel);
+
+        // Revalidar y repintar el marco para reflejar los cambios
+        this.revalidate();
+        this.repaint();
+
+        // Ajustar el tamaño del marco según el nuevo panel
         this.pack();
     }
+
+    public static Usuario getUser() {
+        return user;
+    }
+
+    public static void setUser(Usuario user) {
+        FramePrincipal.user = user;
+    }
+
+    public boolean isInicioSesion() {
+        return inicioSesion;
+    }
+
+    public void setInicioSesion(boolean inicioSesion) {
+        this.inicioSesion = inicioSesion;
+    }
+
+    public PanelUsuario getPanelIngreso() {
+        return panelIngreso;
+    }
+
+    public void setPanelIngreso(PanelUsuario panelIngreso) {
+        this.panelIngreso = panelIngreso;
+    }
+
+    public PanelInicial getPanelInicial() {
+        return panelInicial;
+    }
+
+    public void setPanelInicial(PanelInicial panelInicial) {
+        this.panelInicial = panelInicial;
+    }
+
+    public PanelUsuarioIniciado getPanelUsuarioIniciado() {
+        return panelUsuarioIniciado;
+    }
+
+    public void setPanelUsuarioIniciado(PanelUsuarioIniciado panelUsuarioIniciado) {
+        this.panelUsuarioIniciado = panelUsuarioIniciado;
+    }
+
+    public JMenuItem getItemEntrar() {
+        return itemEntrar;
+    }
+
+    public void setItemEntrar(JMenuItem itemEntrar) {
+        this.itemEntrar = itemEntrar;
+    }
+
+    public JMenuItem getItemSalir() {
+        return itemSalir;
+    }
+
+    public void setItemSalir(JMenuItem itemSalir) {
+        this.itemSalir = itemSalir;
+    }
+
+    public JMenuBar getjMenuBar1() {
+        return jMenuBar1;
+    }
+
+    public void setjMenuBar1(JMenuBar jMenuBar1) {
+        this.jMenuBar1 = jMenuBar1;
+    }
+
+    public JMenuItem getjMenuItem1() {
+        return jMenuItem1;
+    }
+
+    public void setjMenuItem1(JMenuItem jMenuItem1) {
+        this.jMenuItem1 = jMenuItem1;
+    }
+
+    public JMenu getMenuAcerca() {
+        return menuAcerca;
+    }
+
+    public void setMenuAcerca(JMenu menuAcerca) {
+        this.menuAcerca = menuAcerca;
+    }
+
+    public JMenu getMenuValidar() {
+        return menuValidar;
+    }
+
+    public void setMenuValidar(JMenu menuValidar) {
+        this.menuValidar = menuValidar;
+    }
+
+    public JMenu getMenuVisualizar() {
+        return menuVisualizar;
+    }
+
+    public void setMenuVisualizar(JMenu menuVisualizar) {
+        this.menuVisualizar = menuVisualizar;
+    }
+
+    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
+    public javax.swing.JMenuItem itemEntrar;
+    private javax.swing.JMenuItem itemResumen;
+    public javax.swing.JMenuItem itemSalir;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
-    private javax.swing.JMenuItem jMenuItem3;
+    public javax.swing.JMenu menuAcerca;
+    private javax.swing.JMenu menuValidar;
+    public javax.swing.JMenu menuVisualizar;
     // End of variables declaration//GEN-END:variables
 
-    private PanelUsuario panelIngreso;
+    
 }

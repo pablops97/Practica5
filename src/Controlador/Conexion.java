@@ -1,4 +1,4 @@
-package Modelo;
+package Controlador;
 
 
 
@@ -19,7 +19,7 @@ public class Conexion {
     }
     
     public static Connection getConnection() throws SQLException {
-        Connection miConexion = DriverManager.getConnection("jdbc:derby://localhost:1527/Examen","examen","examen");
+        Connection miConexion = DriverManager.getConnection("jdbc:derby://localhost:1527/BaseDatosP5","examen","examen");
     return miConexion;
   } 
 
@@ -43,6 +43,8 @@ public class Conexion {
         } catch (SQLException ignored) {
         }
     }
+    
+    
    
     
 }

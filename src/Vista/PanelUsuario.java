@@ -5,6 +5,13 @@
  */
 package Vista;
 
+import Controlador.ConsultaUsuario;
+import Modelo.Usuario;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ConoMaster
@@ -14,7 +21,11 @@ public class PanelUsuario extends javax.swing.JPanel {
     /**
      * Creates new form PanelUsuario
      */
-    public PanelUsuario() {
+    PanelInicial panelInicial = new PanelInicial();
+    
+    FramePrincipal framePrincipal;
+    public PanelUsuario(FramePrincipal framePrincipal) {
+        this.framePrincipal = framePrincipal;
         initComponents();
     }
 
@@ -29,10 +40,10 @@ public class PanelUsuario extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        txtUsuario = new javax.swing.JTextField();
+        txtContraseña = new javax.swing.JPasswordField();
+        btnIngresar = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
 
         setPreferredSize(new java.awt.Dimension(440, 500));
 
@@ -40,9 +51,19 @@ public class PanelUsuario extends javax.swing.JPanel {
 
         jLabel2.setText("Contraseña");
 
-        jButton1.setText("Ingresar");
+        btnIngresar.setText("Ingresar");
+        btnIngresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIngresarActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Atrás");
+        btnAtras.setText("Atrás");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -51,16 +72,16 @@ public class PanelUsuario extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(43, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2)
-                    .addComponent(jButton1)
+                    .addComponent(btnAtras)
+                    .addComponent(btnIngresar)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel2)
                             .addComponent(jLabel1))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jTextField1)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtUsuario)
+                            .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(63, 63, 63))
         );
         layout.setVerticalGroup(
@@ -69,26 +90,92 @@ public class PanelUsuario extends javax.swing.JPanel {
                 .addContainerGap(147, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35)
-                .addComponent(jButton1)
+                .addComponent(btnIngresar)
                 .addGap(125, 125, 125)
-                .addComponent(jButton2)
+                .addComponent(btnAtras)
                 .addGap(89, 89, 89))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
+        try {
+            compruebaUser();
+            usuarioValidado();
+        } catch (SQLException ex) {
+            Logger.getLogger(PanelUsuario.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnIngresarActionPerformed
 
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        this.setVisible(false);
+        
+        txtUsuario.setText("");
+        txtContraseña.setText("");
+        
+        framePrincipal.setContentPane(panelInicial);
+        framePrincipal.pack();
+    }//GEN-LAST:event_btnAtrasActionPerformed
+
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btnAtras;
+    private javax.swing.JButton btnIngresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JTextField jTextField1;
+    public javax.swing.JPasswordField txtContraseña;
+    public javax.swing.JTextField txtUsuario;
     // End of variables declaration//GEN-END:variables
+
+    
+    
+    public boolean compruebaUser() throws SQLException
+    {
+        String usuario = txtUsuario.getText();
+        String contraseña = txtContraseña.getText();
+
+        Usuario u1;
+
+        u1 = ConsultaUsuario.getUsuario(usuario, contraseña);
+
+        if(u1 == null)
+        {
+            txtUsuario.setText("");
+            txtContraseña.setText("");
+            return false;
+        }
+        else
+        {
+            FramePrincipal.setUser(u1);
+            framePrincipal.panelUsuarioIniciado = new PanelUsuarioIniciado();
+            return true;
+        }
+    }
+    
+    public void usuarioValidado() throws SQLException
+    {
+        if(compruebaUser())
+        {
+            panelInicial.setVisible(false);
+            framePrincipal.cambiarPanel(framePrincipal.getPanelUsuarioIniciado());
+            framePrincipal.itemEntrar.setVisible(false);
+            framePrincipal.itemSalir.setEnabled(true);
+            framePrincipal.menuAcerca.setEnabled(true);
+            framePrincipal.menuVisualizar.setEnabled(true);
+            
+            this.setVisible(false);
+        }
+        else
+        {
+            JOptionPane.showMessageDialog(this, "No existe el usuario en la base de datos.");
+        }
+        
+    }
+
 }
