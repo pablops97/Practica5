@@ -8,6 +8,8 @@ package Vista;
 import Modelo.Usuario;
 import java.awt.BorderLayout;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -24,8 +26,9 @@ public class FramePrincipal extends javax.swing.JFrame {
     private PanelUsuario panelIngreso;
     private PanelInicial panelInicial;
     public PanelUsuarioIniciado panelUsuarioIniciado;
-    public PanelVisualizarResumen panelResumen;
     public PanelUsuarioResumen panelUsuarioResumen;
+    public VistaDetalle vistaDetalle;
+    public JDialogAutores jDialogAutores;
     
     
     public FramePrincipal() {
@@ -72,6 +75,7 @@ public class FramePrincipal extends javax.swing.JFrame {
         jMenuItem2 = new javax.swing.JMenuItem();
         itemResumen = new javax.swing.JMenuItem();
         menuAcerca = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
 
         jMenuItem1.setText("jMenuItem1");
 
@@ -100,6 +104,11 @@ public class FramePrincipal extends javax.swing.JFrame {
         menuVisualizar.setText("Visualizar");
 
         jMenuItem2.setText("Detalle");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         menuVisualizar.add(jMenuItem2);
 
         itemResumen.setText("Resumen");
@@ -113,6 +122,20 @@ public class FramePrincipal extends javax.swing.JFrame {
         jMenuBar1.add(menuVisualizar);
 
         menuAcerca.setText("Acerca de");
+        menuAcerca.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuAcercaActionPerformed(evt);
+            }
+        });
+
+        jMenuItem3.setText("Acerca de");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuAcerca.add(jMenuItem3);
+
         jMenuBar1.add(menuAcerca);
 
         setJMenuBar(jMenuBar1);
@@ -154,11 +177,30 @@ public class FramePrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_itemSalirActionPerformed
 
     private void itemResumenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemResumenActionPerformed
-        panelResumen = new PanelVisualizarResumen(this);
+        panelUsuarioResumen = new PanelUsuarioResumen(user);
         
-        this.cambiarPanel(panelResumen);
+        this.cambiarPanel(panelUsuarioResumen);
         
     }//GEN-LAST:event_itemResumenActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        try {
+            vistaDetalle = new VistaDetalle(user);
+            this.cambiarPanel(vistaDetalle);
+        } catch (SQLException ex) {
+            Logger.getLogger(FramePrincipal.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void menuAcercaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAcercaActionPerformed
+        
+    }//GEN-LAST:event_menuAcercaActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+       jDialogAutores = new JDialogAutores(this, true);
+        jDialogAutores.setVisible(true);
+        this.pack();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -323,6 +365,7 @@ public class FramePrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     public javax.swing.JMenu menuAcerca;
     private javax.swing.JMenu menuValidar;
     public javax.swing.JMenu menuVisualizar;

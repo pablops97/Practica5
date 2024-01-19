@@ -33,6 +33,30 @@ public class ConsultaDetalle {
         ConsultaDetalle.rs = getResultSet(user);
     }
     
+    public static boolean isLast() throws SQLException
+    {
+        if(rs.isLast())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public static boolean isFirst() throws SQLException
+    {
+        if(rs.isFirst())
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
     public static Manga inicial(Usuario user) throws SQLException{
         
         Manga m = new Manga();
@@ -53,14 +77,13 @@ public class ConsultaDetalle {
         Manga m = new Manga();
         
         
-        if (!rs.isAfterLast()) {
+        if (!rs.isLast()) {
             rs.next();
             m.setId(rs.getInt("ID"));
             m.setCodigoUsuario(rs.getInt("CODIGOUSUARIO"));
             m.setNombre(rs.getString("NOMBRE"));
             m.setPrecio(rs.getDouble("PRECIO"));
-            m.setDescripcion(rs.getString("DESCRIPCION"));
-            
+            m.setDescripcion(rs.getString("DESCRIPCION"));  
         }
 
         return m;
@@ -71,8 +94,8 @@ public class ConsultaDetalle {
         Manga m = new Manga();
         
         
-        if (rs.previous()) {
-            
+        if (!rs.isFirst()) {
+            rs.previous();
             m.setId(rs.getInt("ID"));
             m.setCodigoUsuario(rs.getInt("CODIGOUSUARIO"));
             m.setNombre(rs.getString("NOMBRE"));
@@ -103,6 +126,33 @@ public class ConsultaDetalle {
         }
         
     }
+     public static void ActualizarManga(Manga m) throws SQLException{
+        
+        try {
+            // Obtener la conexión
+            Connection connection = Conexion.getConnection();
+
+            // Crear el Statement
+            Statement statement = connection.createStatement();
+
+            // Consulta SQL para actualizar la descripción del manga
+            String sql = "UPDATE Manga SET descripcion = '" + m.getDescripcion() + "' WHERE Id =" + m.getId();
+            System.out.println(""+m.getId());
+            // Ejecutar la consulta de actualización
+            int filasAfectadas = statement.executeUpdate(sql);
+
+            // Verificar si la actualización fue exitosa
+            if (filasAfectadas > 0) {
+                System.out.println("Actualización exitosa");
+            } else {
+                System.out.println("No se pudo actualizar el registro");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+       
+            }
+        }
+    
     
     public static ResultSet getResultSet(Usuario user){
         

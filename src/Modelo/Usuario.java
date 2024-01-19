@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
 /**
  *
@@ -65,8 +66,10 @@ public class Usuario {
         this.contrasenia = contrasenia;
     }
 
-    public Calendar getFechaIngreso() {
-        return fechaIngreso;
+    public String getFechaIngreso() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        String fechaComoString = sdf.format(fechaIngreso.getTime());
+        return fechaComoString;
     }
 
     public void setFechaIngreso(String fecha) throws ParseException {

@@ -68,7 +68,7 @@ public class Manga {
 
     @Override
     public String toString() {
-        return nombre + ", precio=" + precio + ", descripcion=" + descripcion;
+        return nombre +", '" +  descripcion  + "'"+ ", precio = " + precio;
     }
     
     
